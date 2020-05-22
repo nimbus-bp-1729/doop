@@ -15,20 +15,22 @@ def hohman(r1, r2, mu=Earth.mu)
     #         TOF = total time of flight from orbit r1 to orbit r2
     #
     # Calculate the velocities at each circular orbit:
-    v1 = np.sqrt(mu/r1);
-    v2 = np.sqrt(mu/r2);
+    v1 = np.sqrt(mu/r1)
+    v2 = np.sqrt(mu/r2)
 
     # Calculated the semi-major axis of the transfer orbit:
-    a = (r1+r2)/2;
+    a = (r1+r2)/2
 
     # Calculate the velocities of the transfer orbit:
-    v1t = np.sqrt(2*mu/r1 - mu/a);
+    v1t = np.sqrt(2*mu/r1 - mu/a)
     v2t = np.sqrt(2*mu/r2 - mu/a)
 
     # Calculate the deltaV at each r1 and r2:
-    dv1 = abs(v1t - v1);
-    dv2 = abs(v2t - v2);
+    dv1 = abs(v1t - v1)
+    dv2 = abs(v2t - v2)
 
     # Calculate the total deltaV and TOF:
-    dV = dv1 + dv2;
-    TOF = np.pi*np.sqrt(a**3/mu);
+    dV = dv1 + dv2
+    TOF = np.pi*np.sqrt(a**3/mu)
+
+    return (dV, TOF,)
