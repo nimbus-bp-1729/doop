@@ -2,3 +2,7 @@
 .*_cache
 *.egg-info
 dist
+._*
+.DS_Store
+__pycache__
+dev
