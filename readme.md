@@ -16,13 +16,13 @@ TBD
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Orbit1.svg/266px-Orbit1.svg.png)
 
-- Semimajor-axis (a): orbit size
-- Eccentricity (e): orbit shape
-- Inclination (i): orbital plane inclination measure from ascending node
-- Arg of Perigee ($\omega$): orbit orientation
-- Ascending Node ($\Omega$): location of assending node
-- True Anomaly (v): location of satellite in orbit relative to perigee
-- Mean Anomaly (M): fictitious angle that varies linearly with time
+- Semimajor-axis (a)[km]: orbit size
+- Eccentricity (e)[unitless]: orbit shape (0=circule, 1=straight line)
+- Inclination (i)[deg]: orbital plane inclination measure from ascending node
+- Argument of Perigee (w)[deg]: orbit orientation
+- Ascending Node (Omega)[deg]: location of ascending node
+- True Anomaly (v)[deg]: location of satellite in orbit relative to perigee
+- Mean Anomaly (M)[deg]: fictitious angle that varies linearly with time
 
 ## Other Useful Packages
 

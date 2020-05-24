@@ -1,10 +1,25 @@
-# from collections import namedtuple
-# from enum import IntFlag
 from math import pi, pow
 from datetime import datetime, timedelta, timezone
 from doop.constants import Earth
-from doop.objects import COE, ID, Object, EphemerisType, SatelliteTLE
+from collections import namedtuple
 
+from enum import IntFlag
+
+ID = namedtuple("ID", "launch_year launch_number piece")
+Object = namedtuple("Object", "name number classification")
+
+EphemerisType = IntFlag("EphemerisType","SGP SGP4 SDP4 SGP8 SDP8")
+
+TLE = namedtuple("TLE",
+        'object '
+        'id '
+        'coe '
+        'ballistic_coeffecient '
+        'bstar '
+        'line1 line2'
+    )
+
+OE = namedtuple("OE", "a e i raan w v")
 
 def fix_classification(x):
     if x == "U":
@@ -93,15 +108,15 @@ def parse_tle(tle:str):
     v = float(two[6])
 
     # classic orbital elements: a e i raan w v
-    coe = COE(a,e,i,raan,w,v)
+    coe = OE(a,e,i,raan,w,v)
 
     d = int(one[7])
     if d > 0:
         print(EphemerisType(d))
-    else:
-        print(f"unknown ephemeris type: {d}")
+    # else:
+    #     print(f"unknown ephemeris type: {d}")
 
-    return SatelliteTLE(
+    return TLE(
             obj,
             id,
             coe,

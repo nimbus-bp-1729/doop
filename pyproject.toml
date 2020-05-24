@@ -27,7 +27,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-# numpy = "*"
+rotations = "*"
+numpy = "*"
 # pyserial = "^3.4"
 # colorama = "*"
 

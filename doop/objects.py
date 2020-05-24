@@ -1,118 +1,67 @@
 
-from collections import namedtuple
-from enum import IntFlag
-from .constants import Earth
+import requests
+from .elements import COE
+from colorama import Fore
 
-COE = namedtuple("COE", "a e i raan w v")
-ID = namedtuple("ID", "launch_year launch_number piece")
-Object = namedtuple("Object", "name number classification")
+# from collections import namedtuple
 
-EphemerisType = IntFlag("EphemerisType","SGP SGP4 SDP4 SGP8 SDP8")
+# SatelliteTLE = {
+#     "Dragon": """DRAGON CRS-2
+#     1 39115U 13010A   13062.62492353  .00008823  00000-0  14845-3 0   188
+#     2 39115  51.6441 272.5899 0012056 334.2535  68.5574 15.52501943   306""",
+#
+#     "ISS": """ISS (ZARYA)
+#     1 25544U 98067A   08264.51782528 -.00002182  00000-0 -11606-4 0  2927
+#     2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391563537""",
+#
+#     "DragonDemo": """CREW DRAGON DEMO-1
+#     1 44063U 19011A   19062.34862786 -.10981604  00000-0 -22652+0 0  9998
+#     2 44063  51.6335 167.4655 0006446 102.4656 353.9277 15.51500210   163""",
+#
+#     "ChinaSat": """CHINASAT 2D
+#     1 43920U 19001A   19062.86574468 -.00000352  00000-0  00000+0 0  9995
+#     2 43920   0.0402 293.1489 0001187  74.3893 235.4568  1.00273137   662"""
+# }
 
+celestrack = {
+    "gps": "https://celestrak.com/NORAD/elements/gps-ops.txt",
+    "stations": "https://celestrak.com/NORAD/elements/stations.txt"
+}
 
-SatelliteTLE = namedtuple("SatelliteTLE",
-        'object '
-        'id '
-        'coe '
-        'ballistic_coeffecient '
-        'bstar '
-        'line1 line2'
-    )
+def get_tles(w):
+    if w not in celestrack:
+        print(f"{Fore.RED}{w} is invalid; choose: {list(w.keys())}{Fore.RESET}")
+        raise Exception
 
+    f = celestrack[w]
+    resp = requests.get(f)
+    if resp.status_code != 200:
+        raise Exception(f"{Fore.RED}Failed to get TLEs from: {f}{Fore.RESET}")
 
-import attr
+    # print(len(resp.text))
+    # print(resp.text)
 
-@attr.s(slots=True)
-class Satelite:
-    # name = attr.ib()
-    coe = attr.ib(default=None)
-    rv = attr.ib(default=None)
+    d = resp.text.split("\r\n")
+    # print(len(d))
+    # print(d[:6])
+    tles = []
+    for i in range(0, len(d), 3):
+        if d[i] is None:
+            break
+        s = "\n".join(d[i:i+3])
+        tles.append(s)
 
-    @staticmethod
-    def from_tle(tle):
-        s = Satellite()
-        return s
+    print(f">> Found {len(tles)} TLEs")
+    return tles
 
-    @staticmethod
-    def from_rv(RV):
-        s = Satellite()
-        return s
+def get_coes(w):
+    tles = get_tles(w)
 
-    @staticmethod
-    def from_coe(a, e, i, node, w, v, MU=Earth.mu):
-        s = Satellite()
-        return s
-
-
-def rv2coe(R, V, mu=Earth.mu):
-    """Given postion (R) and velocity (V) in an ECI frame, this returns
-    the classical orbital elements: (a, e, i, node, w, v)
-    """
-    H = np.cross(R,V)
-
-    v = np.linalg.norm(V)
-    r = np.linalg.norm(R)
-    energy = v*v/2 - mu/r
-
-    E = np.cross(V,H)/mu - R/r
-    e = np.linalg.norm(E)
-
-    i = np.arccos(H[2]/np.linalg.norm(H))
-    if i < 1e-5: # equitorial orbit
-        node = 0
-        if e < 1e-5:  # circular
-            vv = R[0]/r if R[1] > 0 else 2*pi-R[0]/r
-            w = np.NaN
-        else: # elliptical
-            w = np.arccos(E[0]/e) if E[1] > 0 else 2*pi - np.arccos(E[0]/e)
-            vv = np.arccos(np.dot(E,R)/(e*r))
-            if np.dot(R,V) < 0:
-                vv = 2*pi - vv
-    else:
-        N = np.cross(np.array([0,0,1]), H)
-        n = np.linalg.norm(N)
-        node = np.arccos(N[0]/n)
-        node = 2*pi-node if N[1] <0 else node
-        w = np.arccos(np.dot(N,E)/(d*e))
-        w = 2*pi-w if E[2]<0 else w
-
-    return (a, e, i, node, w, v)
-
-def coe2rv(a, e, i, node, w, v, MU=Earth.mu):
-    """Given the classical orbital elements (a, e, i, node, w, v), this
-    returns the position (R) and the velocity (V) in an ECI frame
-    """
-    p = a*(1-e*e);  # p = semi-latus rectum
-    R = np.zeros(3)
-    V = np.zeros(3)
-    smup = np.sqrt(MU/p)
-    sv = np.sin(v)
-    cv = np.cos(v)
-    det = 1+e*cv
-
-    # Perifocal
-    R(0) =  p*cv/det     # x-coordinate (km)
-    R(1) =  p*sv/det     # y-coordinate (km)
-    R(2) =  0            # z-coordinate (km)
-    V(0) = -smup*sv      # velocity in x (km/s)
-    V(1) =  smup*(e+cv)  # velocity in y (km/s)
-    V(2) =  0            # velocity in z (km/s)
-
-    # R313 = Z1X2Z3 = https://en.wikipedia.org/wiki/Euler_angles
-    #rot = rot3(-node)*rot1(-i)*rot3(-arg);
-    s3 = np.sin(n); c3 = np.cos(n)
-    s2 = np.sin(i); c2 = np.cos(i)
-    s1 = sv; c1 = cv
-    R313 = np.array(
-        [
-            [c1*c3-c2*s1*s3, -c1*s3-c2*c3*s1, s1*s2],
-            [c3*s1+c1*c2*c3, c1*c2*s3, c1*c2*c3-s1*s3,-c1*s2],
-            [s2*s3, c3*s2, c2]
-        ]
-    )
-
-    # Perifocal -> xyz
-    R = R313.dot(R)
-    V = R313.dot(V)
-
-    return (R,V,)
+    coes = []
+    for tle in tles:
+        try:
+            coes.append(COE.from_tle(tle))
+        except Exception as e:
+            print(f"{Fore.CYAN}{tle}{Fore.RESET}")
+            print(f"{Fore.RED}*** {e} ***{Fore.RESET}")
+    return coes
