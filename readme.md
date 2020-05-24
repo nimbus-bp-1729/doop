@@ -4,6 +4,16 @@
 
 **Still figuring out what I want to do with this**
 
+Some simple python code to do astrodynamics work in python.
+
+- hohman transfers
+- convert between classical orbital parameters and position/velocity in ECI
+- convert between some useful reference frames: 
+    - Earth Central Inertial (ECI) [x,y,z]
+    - Earth Centered, Earth Fixed (ECEF) [x,y,z]
+    - North East Down (NED) [x,y,z]
+    - Geocentric [lat,lon,alt]
+
 ## Documents
 
 ### Two Line Elements ([TLEs](docs/tle/tle.md))
