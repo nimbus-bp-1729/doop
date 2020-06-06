@@ -1,5 +1,5 @@
-
-from math import pi, sqrt, sin, cos 
+import numpy as np
+from numpy import pi, sqrt, sin, cos 
 #from matplotlib import pyplot as plt
 
 def perifocal(coe, f):
