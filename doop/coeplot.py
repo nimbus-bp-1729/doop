@@ -27,8 +27,9 @@ def orbit(coe):
     
     https://www.sciencedirect.com/topics/engineering/perifocal-frame
     """
-    oorb = np.zeros((360,2))
+    orb = np.zeros((360,2))
+    deg2rad = pi/180
     for i,f in enumerate(range(360)):
-        oorb[i,:] = perifocal2(sat.coe, f*pi/180)
+        orb[i,:] = perifocal(sat.coe, f*deg2rad)
 
     return orb
