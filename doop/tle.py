@@ -34,12 +34,21 @@ def fix_sci(x):
     """
     TLE have a shorthand for storing scientific numbers, just fixing it
     """
-    s = x.split("-")
+    # leading +/- can trip this up
+    if x[0] == '+' or x[0] == '-':
+        xx = x[1:]
+    else:
+        xx = x
+
+    s = xx.split("-")
+    ss = xx.split("+")
     if len(s) == 2:
         x = float(s[0] + "e-" + s[1])
-    else:
-        s = x.split("+")
+    elif len(ss) == 2:
+        s = ss
         x = float(s[0] + "e+" + s[1])
+    else:
+        x = float(xx)
     return x
 
 def fix_dec(x):
@@ -53,6 +62,7 @@ def fix_dec(x):
     return ret
 
 def fix_year(year:int):
+    # FIXME: need a better solution :)
     return 2000+year if year < 60 else 1900+year
 
 def fix_epoch(day:float, year:int):
@@ -79,14 +89,24 @@ def parse_tle(tle:str):
 
     TLE are in ECI frame
     """
-    name, onel, twol = tle.split("\n")
+    # name, onel, twol = tle.split("\n")
+    tmp = tle.split("\n")
+    if len(tmp) == 2:
+        name = "unknown"
+        onel = tmp[0]
+        twol = tmp[1]
+    elif len(tmp) == 3:
+        name, onel, twol = tmp
+    else:
+        raise Exception(f"tle_parse: too many lines: {len(tmp)}")
+
     one = onel.split()
     two = twol.split()
     # print(f"name: {name}\n one: {one}\n two: {two}\n")
 
     cat = str(one[1]).strip()
     cl = fix_classification(cat[-1])
-    obj = Object(name, int(cat[:-1]),cl)
+    obj = Object(name.strip(), int(cat[:-1]),cl)
 
     yr = fix_year(int(one[2][:2]))
     piece = str(one[2][-1])
@@ -97,7 +117,7 @@ def parse_tle(tle:str):
     day = float(one[3][2:])
     # print("epoch", fix_epoch(day, yr))
 
-    n = float(two[7][:11])  # mean motion
+    n = float(two[7][:11])  # mean motion, or period of orbit
     u = Earth.mu
 
     a = pow(u,1/3)/pow(2*n*pi/86400, 2/3)
