@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "doop"
-version = "0.0.1"
+version = "0.0.4"
 description = "orbital dynamics"
 authors = ["walchko <walchko@users.noreply.github.com>"]
 readme = "readme.md"
@@ -22,22 +22,14 @@ classifiers = [
     'Topic :: Software Development :: Libraries :: Application Frameworks'
 ]
 
-# [tool.poetry.scripts]
-# # script_name = 'myscript:main'
-
 [tool.poetry.dependencies]
 python = ">=3.6"
 rotations = "*"
 numpy = "*"
-# pyserial = "^3.4"
-# colorama = "*"
+importlib-metadata = {version="*", python="<3.8"}
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
-# mypy = "*"
-
-# [mypy-pi_servo_serial]
-# ignore_missing_imports = True
+pytest = "*"
 
 [build-system]
 requires = ["poetry>=0.12"]
