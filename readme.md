@@ -1,4 +1,6 @@
-![](pics/zapp.png)
+![](https://raw.githubusercontent.com/nimbus-bp-1729/doop/master/pics/zapp.png)
+
+![Python](https://github.com/nimbus-bp-1729/doop/workflows/Python/badge.svg)
 
 # DOOP
 
