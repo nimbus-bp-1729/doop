@@ -90,14 +90,19 @@ def parse_tle(tle:str):
     TLE are in ECI frame
     """
     # name, onel, twol = tle.split("\n")
+    tle.strip()
+    if tle[-1] == "\n":
+        tle = tle[:-1]
+
     tmp = tle.split("\n")
     if len(tmp) == 2:
         name = "unknown"
         onel = tmp[0]
         twol = tmp[1]
-    elif len(tmp) == 3:
-        name, onel, twol = tmp
+    elif len(tmp) >= 3:
+        name, onel, twol = tmp[:3]
     else:
+        print(tmp)
         raise Exception(f"tle_parse: too many lines: {len(tmp)}")
 
     one = onel.split()

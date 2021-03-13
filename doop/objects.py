@@ -23,45 +23,54 @@ from colorama import Fore
 #     2 43920   0.0402 293.1489 0001187  74.3893 235.4568  1.00273137   662"""
 # }
 
-celestrack = {
-    "gps": "https://celestrak.com/NORAD/elements/gps-ops.txt",
-    "stations": "https://celestrak.com/NORAD/elements/stations.txt"
-}
 
-def get_tles(w):
-    if w not in celestrack:
-        print(f"{Fore.RED}{w} is invalid; choose: {list(w.keys())}{Fore.RESET}")
-        raise Exception
+class Celestrak:
+    endpts = {
+        "gps": "https://celestrak.com/NORAD/elements/gps-ops.txt",
+        "galileo": "https://celestrak.com/NORAD/elements/galileo.txt",
+        "beidou": "https://celestrak.com/NORAD/elements/beidou.txt",
+        "glonass": "https://celestrak.com/NORAD/elements/glo-ops.txt",
+        "stations": "https://celestrak.com/NORAD/elements/stations.txt",
+        "starlink": "https://celestrak.com/NORAD/elements/starlink.txt"
+    }
 
-    f = celestrack[w]
-    resp = requests.get(f)
-    if resp.status_code != 200:
-        raise Exception(f"{Fore.RED}Failed to get TLEs from: {f}{Fore.RESET}")
+    def raw(self, w):
+        if w not in self.endpts:
+            print(f"{Fore.RED}{w} is invalid; choose: {list(w.keys())}{Fore.RESET}")
+            raise Exception
 
-    # print(len(resp.text))
-    # print(resp.text)
+        f = self.endpts[w]
+        resp = requests.get(f)
+        if resp.status_code != 200:
+            raise Exception(f"{Fore.RED}Failed to get TLEs from: {f}{Fore.RESET}")
 
-    d = resp.text.split("\r\n")
-    # print(len(d))
-    # print(d[:6])
-    tles = []
-    for i in range(0, len(d), 3):
-        if d[i] is None:
-            break
-        s = "\n".join(d[i:i+3])
-        tles.append(s)
+        # print(len(resp.text))
+        # print(resp.text)
 
-    print(f">> Found {len(tles)} TLEs")
-    return tles
+        d = resp.text.split("\r\n")
+        # print(len(d))
+        # print(d[:6])
+        tles = []
+        for i in range(0, len(d), 3):
+            if d[i] is None:
+                break
+            s = "\n".join(d[i:i+3])
+            tles.append(s)
 
-def get_coes(w):
-    tles = get_tles(w)
+        print(f">> Found {len(tles)} satellites")
+        return tles
 
-    coes = []
-    for tle in tles:
-        try:
-            coes.append(COE.from_tle(tle))
-        except Exception as e:
-            print(f"{Fore.CYAN}{tle}{Fore.RESET}")
-            print(f"{Fore.RED}*** {e} ***{Fore.RESET}")
-    return coes
+    def tles(self, w):
+        pass
+
+    def coes(self, w):
+        tles = self.raw(w)
+
+        coes = []
+        for tle in tles:
+            try:
+                coes.append(COE.from_tle(tle))
+            except Exception as e:
+                print(f"{Fore.CYAN}{tle}{Fore.RESET}")
+                print(f"{Fore.RED}*** {e} ***{Fore.RESET}")
+        return coes
