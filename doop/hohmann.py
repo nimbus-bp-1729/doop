@@ -1,7 +1,7 @@
 import numpy as np
 from .constants import Earth
 
-def hohman(r1, r2, mu=Earth.mu)
+def hohman(r1, r2, mu=Earth.mu):
     #
     # Description: Assuming circular orbits of radius r1 and r2 around the
     # central body described by mu, a hohmann transfer from r1 to r2 is
