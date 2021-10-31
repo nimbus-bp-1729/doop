@@ -29,11 +29,11 @@ rad2deg = 180/pi
 # tilt [deg]
 
 
-Body = namedtuple("Body", "radius mass mu tilt")
+Body = namedtuple("Body", "radius mass mu tilt geo")
 
 to_km3 = 1/1000/1000/1000
 # https://en.wikipedia.org/wiki/Earth
-Earth = Body(6378.388, 5.97237E24, 3.986004418E14*to_km3, 23.4392811)
+Earth = Body(6378.388, 5.97237E24, 3.986004418E14*to_km3, 23.4392811, 42164)
 
 # https://en.wikipedia.org/wiki/Moon
-Moon = Body(1737.4, 7.342e22, 4.9048695e12*to_km3, 1.5424)
+Moon = Body(1737.4, 7.342e22, 4.9048695e12*to_km3, 1.5424, None)

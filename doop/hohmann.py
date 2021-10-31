@@ -1,7 +1,7 @@
 import numpy as np
 from .constants import Earth
 
-def hohman(r1, r2, mu=Earth.mu):
+def hohmann(r1, r2, mu=Earth.mu):
     #
     # Description: Assuming circular orbits of radius r1 and r2 around the
     # central body described by mu, a hohmann transfer from r1 to r2 is
@@ -11,8 +11,8 @@ def hohman(r1, r2, mu=Earth.mu):
     #         r2  = radius of orbit 2
     #         mu  = gravitational parameter of central body
     #
-    # Output: dV  = total deltaV of hohmann transfer from r1 to r2
-    #         TOF = total time of flight from orbit r1 to orbit r2
+    # Output: dV  = total deltaV of hohmann transfer from r1 to r2 [km/sec]
+    #         TOF = total time of flight from orbit r1 to orbit r2 [sec]
     #
     # Calculate the velocities at each circular orbit:
     v1 = np.sqrt(mu/r1)
