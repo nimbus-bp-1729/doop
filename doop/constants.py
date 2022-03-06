@@ -18,6 +18,7 @@ rad2deg = 180/pi
 
 LagrangePoint = namedtuple("LagrangePoint","L1 L2 L3 L4 L5")
 EarthMoonLagrange = LagrangePoint(326000e3,448900e3,381680e3,0,0) # m
+GEO = 42164e3 # m
 
 speedOfLight = 3*10**8 # m/s
 
