@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "doop"
-version = "0.0.5"
-description = "orbital dynamics"
+version = "0.1.0"
+description = "space and orbital dynamics"
 authors = ["walchko <walchko@users.noreply.github.com>"]
 readme = "readme.md"
 license = "MIT"
 homepage = "https://pypi.org/project/doop/"
 repository = 'https://github.com/nimbus-bp-1729/doop'
 # documentation = "http://..."
-keywords = ["orbit"]
+keywords = ["orbit", "smad", "space"]
 classifiers = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
